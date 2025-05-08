@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bot de señales Aviator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1c1c1c;
+      color: #fff;
+      padding: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+    }
+    input {
+      background: #333;
+      color: #fff;
+    }
+    button {
+      background: #e91e63;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .resultado {
+      margin-top: 20px;
+      font-size: 18px;
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Bot de Señales - Aviator</h2>
+  <p>Ingresa los últimos multiplicadores (separados por comas):</p>
+  <input type="text" id="multiplicadores" placeholder="Ejemplo: 1.2, 2.5, 1.0, 1.7, 3.0">
+
+  <button onclick="predecir()">Obtener Señal</button>
+
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    function predecir() {
+      const input = document.getElementById('multiplicadores').value;
+      const datos = input.split(',').map(x => parseFloat(x.trim())).filter(x => !isNaN(x));
+
+      if (datos.length < 3) {
+        document.getElementById('resultado').innerHTML = "Por favor ingresa al menos 3 valores válidos.";
+        return;
+      }
+
+      const ultimos = datos.slice(-5);
+      const promedio = ultimos.reduce((a, b) => a + b, 0) / ultimos.length;
+      const prediccion = Math.max(1.01, (promedio + (Math.random() * 0.6 - 0.3)).toFixed(2));
+
+      let mensaje = `Basado en los últimos vuelos, el avión podría subir hasta <strong>${prediccion}x</strong>.`;
+
+      // Señal adicional simple
+      const bajos = ultimos.filter(x => x < 1.5).length;
+      if (bajos >= 3) {
+        mensaje += "<br><em>¡Han salido muchos bajos! Podría venir uno alto pronto.</em>";
+      }
+
+      document.getElementById('resultado').innerHTML = mensaje;
+    }
+  </script>
+
+</body>
+</html>
